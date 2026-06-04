@@ -1,0 +1,864 @@
+/* ─── Layout ───────────────────────────────── */
+.bookingLayout {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 2.5rem;
+  align-items: start;
+}
+
+/* ─── Progress ─────────────────────────────── */
+.progress {
+  display: flex;
+  align-items: center;
+  margin-bottom: 2.5rem;
+  gap: 0;
+}
+
+.progressStep {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  position: relative;
+}
+
+.progressDot {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 2px solid var(--clr-border-subtle);
+  background: var(--clr-white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-heading);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--clr-text-muted);
+  flex-shrink: 0;
+  transition: all var(--transition-base);
+  z-index: 1;
+}
+
+.progressStepActive .progressDot {
+  border-color: var(--clr-red);
+  color: var(--clr-red);
+  background: rgba(128, 0, 0, 0.07);
+}
+
+.progressStepDone .progressDot {
+  background: var(--clr-red);
+  border-color: var(--clr-red);
+  color: white;
+}
+
+.progressLabel {
+  font-family: var(--font-heading);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--clr-text-light);
+  white-space: nowrap;
+  margin-left: 0.5rem;
+  transition: color var(--transition-base);
+}
+
+.progressStepActive .progressLabel { color: var(--clr-red); }
+.progressStepDone .progressLabel { color: var(--clr-text-muted); }
+
+.progressLine {
+  flex: 1;
+  height: 2px;
+  background: var(--clr-border-subtle);
+  margin: 0 0.5rem;
+  margin-right: 0.5rem;
+}
+
+.progressStepDone .progressLine { background: var(--clr-red); }
+
+/* ─── Step Content ─────────────────────────── */
+.formColumn {
+  background: var(--clr-white);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-xl);
+  padding: 2.5rem;
+  min-height: 500px;
+  display: flex;
+  flex-direction: column;
+}
+
+.stepContent {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  flex: 1;
+}
+
+.stepTitle {
+  font-family: var(--font-heading);
+  font-size: 1.375rem;
+  font-weight: 700;
+  color: var(--clr-black);
+  margin-bottom: 0.25rem;
+}
+
+/* ─── Service Options ──────────────────────── */
+.serviceOptions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.serviceOption {
+  text-align: left;
+  padding: 1.25rem 1.5rem;
+  border: 1.5px solid var(--clr-border-subtle);
+  border-radius: var(--radius-lg);
+  background: var(--clr-white);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.serviceOption:hover {
+  border-color: var(--clr-red);
+  background: rgba(128, 0, 0, 0.03);
+}
+
+.serviceOptionSelected {
+  border-color: var(--clr-red);
+  background: rgba(128, 0, 0, 0.06);
+  box-shadow: 0 0 0 3px rgba(128, 0, 0, 0.1);
+}
+
+.serviceOptionTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.serviceOptionName {
+  font-family: var(--font-heading);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--clr-black);
+}
+
+.serviceOptionDesc {
+  font-size: 0.8125rem;
+  color: var(--clr-text-muted);
+  line-height: 1.6;
+}
+
+.serviceOptionPrice {
+  font-family: var(--font-heading);
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: var(--clr-red);
+  margin-top: 0.25rem;
+}
+
+/* ─── Time Slots ───────────────────────────── */
+.timeSlots {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 0.625rem;
+}
+
+.timeSlot {
+  padding: 0.625rem 0.5rem;
+  border: 1.5px solid var(--clr-border-subtle);
+  border-radius: var(--radius-md);
+  font-family: var(--font-heading);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--clr-text-muted);
+  background: var(--clr-white);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  text-align: center;
+}
+
+.timeSlot:hover {
+  border-color: var(--clr-red);
+  color: var(--clr-red);
+  background: rgba(128, 0, 0, 0.04);
+}
+
+.timeSlotSelected {
+  background: var(--clr-red);
+  border-color: var(--clr-red);
+  color: white;
+}
+
+/* ─── Payment Card ─────────────────────────── */
+.paymentCard {
+  background: var(--clr-cream);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-xl);
+  padding: 1.75rem;
+  border-top: 3px solid var(--clr-red);
+}
+
+.paymentCardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.875rem;
+}
+
+.paymentCardTitle {
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--clr-red);
+}
+
+.paymentCardBadge {
+  font-family: var(--font-heading);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0.25rem 0.625rem;
+  background: var(--clr-red);
+  color: var(--clr-cream);
+  border-radius: var(--radius-full);
+}
+
+.paymentCardNote {
+  font-size: 0.875rem;
+  color: var(--clr-text-muted);
+  line-height: 1.7;
+  margin-bottom: 1.25rem;
+}
+
+.paymentAmount {
+  background: var(--clr-white);
+  border-radius: var(--radius-md);
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.25rem;
+  border: 1px solid var(--clr-border);
+}
+
+.paymentAmountLabel {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--clr-text-muted);
+  margin-bottom: 0.375rem;
+}
+
+.paymentAmountValue {
+  display: block;
+  font-family: var(--font-heading);
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--clr-red);
+  line-height: 1;
+}
+
+.paymentAmountNote {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--clr-text-light);
+  margin-top: 0.375rem;
+}
+
+.bankDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.bankRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--clr-border);
+}
+
+.bankRow:last-child { border-bottom: none; padding-bottom: 0; }
+
+.bankLabel {
+  font-size: 0.8125rem;
+  color: var(--clr-text-muted);
+  flex-shrink: 0;
+}
+
+.bankValue {
+  font-family: var(--font-heading);
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: var(--clr-black);
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+.copyBtn {
+  font-family: var(--font-heading);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  padding: 0.25rem 0.625rem;
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  color: var(--clr-red);
+  background: var(--clr-white);
+  transition: all var(--transition-fast);
+}
+
+.copyBtn:hover {
+  background: var(--clr-red);
+  color: white;
+  border-color: var(--clr-red);
+}
+
+/* ─── Upload ───────────────────────────────── */
+.uploadArea {
+  display: block;
+  border: 2px dashed var(--clr-border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color var(--transition-fast), background var(--transition-fast);
+}
+
+.uploadArea:hover {
+  border-color: var(--clr-red);
+  background: rgba(128, 0, 0, 0.02);
+}
+
+.uploadInput {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.uploadContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+.uploadIcon {
+  font-size: 1.75rem;
+  line-height: 1;
+  color: var(--clr-red);
+}
+
+.uploadText {
+  font-family: var(--font-heading);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--clr-black);
+}
+
+.uploadHint {
+  font-size: 0.8125rem;
+  color: var(--clr-text-muted);
+}
+
+/* ─── T&C ──────────────────────────────────── */
+.termsCheck {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.875rem;
+  cursor: pointer;
+  margin-top: 0.5rem;
+}
+
+.termsCheckInput {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--clr-red);
+  flex-shrink: 0;
+  margin-top: 2px;
+  cursor: pointer;
+}
+
+.termsCheckLabel {
+  font-size: 0.9rem;
+  color: var(--clr-text-muted);
+  line-height: 1.6;
+}
+
+.termsCheckLabel a {
+  color: var(--clr-red);
+  text-decoration: underline;
+}
+
+/* ─── Step Nav ─────────────────────────────── */
+.stepNav {
+  display: flex;
+  align-items: center;
+  padding-top: 2rem;
+  border-top: 1px solid var(--clr-border);
+  margin-top: 1.5rem;
+}
+
+/* ─── Summary Column ───────────────────────── */
+.summaryColumn {
+  position: sticky;
+  top: calc(72px + 1.5rem);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.summaryCard {
+  background: var(--clr-white);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-xl);
+  padding: 1.75rem;
+}
+
+.summaryTitle {
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--clr-black);
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.875rem;
+  border-bottom: 1px solid var(--clr-border);
+}
+
+.summaryItems {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+  margin-bottom: 1.25rem;
+}
+
+.summaryItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.summaryLabel {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--clr-text-light);
+}
+
+.summaryValue {
+  font-family: var(--font-heading);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--clr-black);
+}
+
+.summaryEmpty { color: var(--clr-text-light); font-weight: 400; font-style: italic; }
+
+.summaryPriceBox {
+  background: var(--clr-cream);
+  border-radius: var(--radius-md);
+  padding: 1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+  border: 1px solid var(--clr-border);
+}
+
+.summaryPriceRow {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.875rem;
+  color: var(--clr-text-muted);
+}
+
+.summaryPriceRowTotal {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--clr-red);
+  padding-top: 0.625rem;
+  border-top: 1px solid var(--clr-border);
+}
+
+.summaryPlaceholder {
+  font-size: 0.875rem;
+  color: var(--clr-text-light);
+  font-style: italic;
+  text-align: center;
+  padding: 1rem 0;
+}
+
+.helpCard {
+  background: var(--clr-white);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-xl);
+  padding: 1.25rem 1.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+}
+
+.helpTitle {
+  font-family: var(--font-heading);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--clr-text-muted);
+}
+
+/* ─── Success ──────────────────────────────── */
+.successPage {
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 1rem;
+}
+
+.successCard {
+  background: var(--clr-white);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-xl);
+  padding: 3rem 2.5rem;
+  max-width: 560px;
+  width: 100%;
+  text-align: center;
+  box-shadow: var(--shadow-lg);
+}
+
+.successIcon {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: rgba(4, 120, 87, 0.1);
+  color: #047857;
+  font-size: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.5rem;
+  font-weight: 700;
+}
+
+.successTitle {
+  font-family: var(--font-heading);
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: var(--clr-black);
+  margin-bottom: 1rem;
+}
+
+.successDesc {
+  font-size: 1rem;
+  color: var(--clr-text-muted);
+  line-height: 1.7;
+  margin-bottom: 0.875rem;
+}
+
+.successNote {
+  font-size: 0.9rem;
+  color: var(--clr-text-light);
+  line-height: 1.7;
+  margin-bottom: 1.5rem;
+}
+
+.successRef {
+  display: inline-block;
+  background: var(--clr-cream);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-md);
+  padding: 0.625rem 1.25rem;
+  font-size: 0.875rem;
+  color: var(--clr-text-muted);
+  margin-bottom: 2rem;
+  letter-spacing: 0.02em;
+}
+
+.successActions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* ─── Responsive ───────────────────────────── */
+@media (max-width: 1024px) {
+  .bookingLayout { grid-template-columns: 1fr; }
+  .summaryColumn { position: static; }
+}
+
+@media (max-width: 600px) {
+  .formColumn { padding: 1.5rem; }
+  .progress { overflow-x: auto; padding-bottom: 0.5rem; }
+  .progressLabel { display: none; }
+}
+
+/* ─── Category Tabs ────────────────────────── */
+.categoryTabs {
+  display: flex;
+  gap: 0.75rem;
+  overflow-x: auto;
+  padding: 0.5rem 0.25rem;
+  margin-top: 0.5rem;
+  scrollbar-width: none;
+}
+
+.categoryTabs::-webkit-scrollbar {
+  display: none;
+}
+
+.categoryTab {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.75rem 1.25rem;
+  border-radius: var(--radius-full);
+  border: 1.5px solid var(--clr-border-subtle);
+  background: var(--clr-white);
+  color: var(--clr-text-muted);
+  font-family: var(--font-heading);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all var(--transition-fast);
+}
+
+.categoryTab:hover {
+  border-color: var(--clr-red);
+  color: var(--clr-red);
+  background: rgba(128, 0, 0, 0.02);
+}
+
+.categoryTabActive {
+  border-color: var(--clr-red);
+  background: var(--clr-red);
+  color: white !important;
+  box-shadow: 0 4px 12px rgba(128, 0, 0, 0.15);
+}
+
+.categoryTabIcon {
+  font-size: 1.1rem;
+}
+
+.categoryTabLabel {
+  line-height: 1;
+}
+
+/* ─── Services Header & Count Hint ─────────── */
+.servicesHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 0.75rem;
+}
+
+.servicesCountHint {
+  font-size: 0.8125rem;
+  color: var(--clr-text-light);
+  font-weight: 500;
+}
+
+/* ─── Service Option Overrides ─────────────── */
+.serviceOptionNameWrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.serviceOptionCheckbox {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 6px;
+  border: 2px solid var(--clr-border-subtle);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: transparent;
+  transition: all var(--transition-fast);
+  flex-shrink: 0;
+  background: white;
+}
+
+.serviceOption:hover .serviceOptionCheckbox {
+  border-color: var(--clr-red);
+}
+
+.serviceOptionCheckboxActive {
+  background: var(--clr-red);
+  border-color: var(--clr-red) !important;
+  color: white;
+}
+
+.serviceOptionPriceWrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0.5rem;
+  width: 100%;
+}
+
+.serviceOptionSelectedTag {
+  font-family: var(--font-heading);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--clr-red);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* ─── Cart Banner ──────────────────────────── */
+.cartBanner {
+  position: sticky;
+  bottom: 0;
+  background: var(--clr-white);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.5rem;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.05), 0 4px 6px rgba(0, 0, 0, 0.02);
+  margin-top: 2rem;
+  z-index: 10;
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.cartBannerInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.cartBannerCount {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--clr-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.cartBannerTotal {
+  font-family: var(--font-heading);
+  font-size: 1.375rem;
+  font-weight: 800;
+  color: var(--clr-red);
+}
+
+/* ─── Payment Breakdown ────────────────────── */
+.paymentBreakdown {
+  background: var(--clr-white);
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+  margin-bottom: 1.25rem;
+  border: 1px solid var(--clr-border);
+}
+
+.paymentBreakdownTitle {
+  font-family: var(--font-heading);
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--clr-black);
+  margin-bottom: 0.875rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--clr-border-subtle);
+}
+
+.paymentBreakdownList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+}
+
+.paymentBreakdownRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.paymentBreakdownNameCol {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.paymentBreakdownName {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--clr-black);
+}
+
+.paymentBreakdownType {
+  font-size: 0.75rem;
+  color: var(--clr-text-light);
+}
+
+.paymentBreakdownPriceCol {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.125rem;
+  text-align: right;
+}
+
+.paymentBreakdownPrice {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--clr-black);
+}
+
+.paymentBreakdownDeposit {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--clr-red);
+}
+
+/* ─── Summary Cart List ────────────────────── */
+.summaryCartList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+}
+
+.summaryCartItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.5rem 0.75rem;
+  background: var(--clr-cream);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--clr-border-subtle);
+}
+
+.summaryCartItemName {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--clr-black);
+}
+
+.summaryCartItemPrice {
+  font-family: var(--font-heading);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--clr-red);
+  white-space: nowrap;
+}
+

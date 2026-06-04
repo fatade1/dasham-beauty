@@ -1,0 +1,136 @@
+.footer {
+  background: var(--clr-black);
+  color: var(--clr-cream);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1.5fr;
+  gap: 3rem;
+  padding-block: 5rem 3rem;
+}
+
+/* ─── Brand ────────────────────────────────── */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  margin-bottom: 1.25rem;
+}
+
+.logoImg {
+  height: 48px;
+  width: auto;
+  display: block;
+}
+
+.tagline {
+  font-size: 0.9rem;
+  color: rgba(255, 247, 220, 0.7);
+  line-height: 1.7;
+  max-width: 28ch;
+  margin-bottom: 1.5rem;
+}
+
+.socials {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.socialLink {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid rgba(240, 196, 52, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--clr-cream);
+  transition: border-color var(--transition-fast), background var(--transition-fast), color var(--transition-fast);
+}
+
+.socialLink:hover {
+  border-color: var(--clr-gold);
+  background: rgba(240, 196, 52, 0.1);
+  color: var(--clr-gold);
+}
+
+/* ─── Columns ──────────────────────────────── */
+.col { display: flex; flex-direction: column; }
+
+.colTitle {
+  font-family: var(--font-heading);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--clr-gold);
+  margin-bottom: 1.25rem;
+}
+
+.links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+.footerLink {
+  font-size: 0.9rem;
+  color: rgba(255, 247, 220, 0.7);
+  transition: color var(--transition-fast);
+}
+
+.footerLink:hover {
+  color: var(--clr-cream);
+}
+
+/* ─── Contact ──────────────────────────────── */
+.contactItems {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+}
+
+.contactItem {
+  display: flex;
+  gap: 0.75rem;
+  font-size: 0.9rem;
+  color: rgba(255, 247, 220, 0.7);
+  line-height: 1.5;
+}
+
+.contactIcon { flex-shrink: 0; margin-top: 1px; }
+
+.contactLink {
+  color: rgba(255, 247, 220, 0.7);
+  transition: color var(--transition-fast);
+}
+
+.contactLink:hover { color: var(--clr-cream); }
+
+/* ─── Bottom ───────────────────────────────── */
+.bottom {
+  border-top: 1px solid rgba(255, 247, 220, 0.1);
+  padding-block: 1.25rem;
+}
+
+.bottomInner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8125rem;
+  color: rgba(255, 247, 220, 0.4);
+}
+
+.bottomRight { color: rgba(255, 247, 220, 0.3); }
+
+/* ─── Responsive ───────────────────────────── */
+@media (max-width: 1024px) {
+  .grid { grid-template-columns: 1fr 1fr; }
+  .brand { grid-column: 1 / -1; }
+}
+
+@media (max-width: 600px) {
+  .grid { grid-template-columns: 1fr; gap: 2rem; padding-block: 3rem 2rem; }
+  .bottomInner { flex-direction: column; gap: 0.5rem; text-align: center; }
+}

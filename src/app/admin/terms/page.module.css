@@ -1,0 +1,54 @@
+.page { max-width: 860px; }
+
+.pageHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+}
+
+.pageTitle {
+  font-family: var(--font-heading);
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: var(--clr-black);
+  margin-bottom: 0.25rem;
+}
+
+.pageDesc {
+  font-size: 0.9rem;
+  color: var(--clr-text-muted);
+}
+
+.editorCard {
+  background: var(--clr-white);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+}
+
+.editorHeader {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--clr-border);
+  background: var(--clr-cream);
+}
+
+.editorHint {
+  font-size: 0.8125rem;
+  color: var(--clr-text-muted);
+}
+
+.editor {
+  width: 100%;
+  display: block;
+  padding: 1.5rem;
+  font-family: 'Courier New', monospace;
+  font-size: 0.875rem;
+  line-height: 1.8;
+  color: var(--clr-text-primary);
+  border: none;
+  resize: vertical;
+  background: var(--clr-white);
+  outline: none;
+  min-height: 500px;
+}

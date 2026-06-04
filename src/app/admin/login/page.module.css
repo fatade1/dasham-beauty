@@ -1,0 +1,82 @@
+.loginPage {
+  min-height: 100vh;
+  background: var(--clr-black);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.loginPage::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 20% 50%, rgba(128,0,0,0.3) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, rgba(240,196,52,0.08) 0%, transparent 40%);
+  pointer-events: none;
+}
+
+.loginCard {
+  background: var(--clr-cream);
+  border-radius: var(--radius-xl);
+  padding: 3rem 2.5rem;
+  width: 100%;
+  max-width: 420px;
+  position: relative;
+  z-index: 1;
+  box-shadow: var(--shadow-lg);
+}
+
+.loginLogo {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.loginLogoImg {
+  height: 52px;
+  width: auto;
+  display: block;
+}
+
+.loginTitle {
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--clr-black);
+  margin-bottom: 0.5rem;
+}
+
+.loginDesc {
+  font-size: 0.9375rem;
+  color: var(--clr-text-muted);
+  margin-bottom: 2rem;
+}
+
+.loginForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.loginBtn { margin-top: 0.5rem; }
+
+.loginHint {
+  margin-top: 1.5rem;
+  font-size: 0.8125rem;
+  color: var(--clr-text-light);
+  text-align: center;
+  line-height: 1.7;
+}
+
+.loginHint code {
+  background: var(--clr-cream-dark);
+  padding: 0.125rem 0.375rem;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  color: var(--clr-red);
+  font-weight: 600;
+}
