@@ -232,6 +232,18 @@ function BookingForm() {
     };
 
     saveBooking(booking);
+
+    // Send background email notification to admin (fails silently for client)
+    try {
+      fetch('/api/send-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(booking),
+      }).catch((err) => console.error('Error sending email notification:', err));
+    } catch (e) {
+      console.error(e);
+    }
+
     setBookingId(id);
     setSubmitting(false);
     setSubmitted(true);
