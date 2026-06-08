@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { initializeDefaultData } from '@/lib/init';
 import { getServices, getGallery } from '@/lib/storage';
 import { formatPrice, whatsappUrl, CATEGORY_ICONS } from '@/lib/utils';
 import { Service, ServiceCategory, GalleryImage } from '@/lib/types';
@@ -69,19 +68,25 @@ export default function HomePage() {
   const [galleryImages, setGalleryImages] = useState<GalleryImage[]>([]);
 
   useEffect(() => {
-    initializeDefaultData();
-    const services = getServices().filter((s) => s.status === 'active');
-    // Pick 3 featured services across different categories
-    const featured: Service[] = [];
-    const seen = new Set<string>();
-    for (const s of services) {
-      if (!seen.has(s.category) && featured.length < 6) {
-        featured.push(s);
-        seen.add(s.category);
+    async function loadData() {
+      const allServices = await getServices();
+      const services = allServices.filter((s) => s.status === 'active');
+      
+      // Pick 3 featured services across different categories
+      const featured: Service[] = [];
+      const seen = new Set<string>();
+      for (const s of services) {
+        if (!seen.has(s.category) && featured.length < 6) {
+          featured.push(s);
+          seen.add(s.category);
+        }
       }
+      setFeaturedServices(featured);
+
+      const allGallery = await getGallery();
+      setGalleryImages(allGallery.filter((g) => g.status === 'active').slice(0, 6));
     }
-    setFeaturedServices(featured);
-    setGalleryImages(getGallery().filter((g) => g.status === 'active').slice(0, 6));
+    loadData();
   }, []);
 
   const enquiryUrl = whatsappUrl(

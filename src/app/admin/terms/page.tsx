@@ -9,11 +9,15 @@ export default function AdminTermsPage() {
   const [saved, setSaved] = useState(false);
 
   useEffect(() => {
-    setContent(getTerms().content);
+    async function loadData() {
+      const data = await getTerms();
+      setContent(data.content);
+    }
+    loadData();
   }, []);
 
-  const handleSave = () => {
-    saveTerms(content);
+  const handleSave = async () => {
+    await saveTerms(content);
     setSaved(true);
     setTimeout(() => setSaved(false), 2000);
   };

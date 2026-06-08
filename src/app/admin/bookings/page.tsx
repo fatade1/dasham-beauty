@@ -27,7 +27,11 @@ export default function AdminBookingsPage() {
   const [filter, setFilter] = useState<BookingStatus | 'all'>('all');
 
   useEffect(() => {
-    setBookings(getBookings());
+    async function loadData() {
+      const data = await getBookings();
+      setBookings(data);
+    }
+    loadData();
   }, []);
 
   const filtered = filter === 'all'

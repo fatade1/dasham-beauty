@@ -2,7 +2,9 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { getSiteSettings, setAdminAuth } from '@/lib/storage';
+import { auth } from '@/lib/firebase';
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
+import { getSiteSettings } from '@/lib/storage';
 import styles from './page.module.css';
 
 export default function AdminLoginPage() {
@@ -11,21 +13,37 @@ export default function AdminLoginPage() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError('');
 
-    setTimeout(() => {
-      const settings = getSiteSettings();
-      if (password === settings.adminPasswordHash) {
-        setAdminAuth(true);
-        router.push('/admin/dashboard');
-      } else {
-        setError('Incorrect password. Please try again.');
-        setLoading(false);
+    const email = 'dashambeautylounge@gmail.com';
+
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      router.push('/admin/dashboard');
+    } catch (err: any) {
+      console.warn('Firebase login failed, trying fallback auto-migration:', err);
+
+      // If account does not exist in Auth database, or standard credentials fail check
+      if (err.code === 'auth/user-not-found' || err.code === 'auth/invalid-credential' || err.code === 'auth/invalid-email') {
+        try {
+          const settings = await getSiteSettings();
+          if (password === settings.adminPasswordHash) {
+            // Auto-create account programmatically on correct legacy password input
+            await createUserWithEmailAndPassword(auth, email, password);
+            router.push('/admin/dashboard');
+            return;
+          }
+        } catch (migrationErr) {
+          console.error('Legacy password check / auto-registration error:', migrationErr);
+        }
       }
-    }, 600);
+
+      setError('Incorrect password. Please try again.');
+      setLoading(false);
+    }
   };
 
   return (

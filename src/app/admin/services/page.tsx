@@ -33,17 +33,23 @@ export default function AdminServicesPage() {
   const [editId, setEditId] = useState<string | null>(null);
   const [filter, setFilter] = useState<ServiceCategory | 'All'>('All');
 
-  const reload = () => setServices(getServices());
-  useEffect(reload, []);
+  const reload = async () => {
+    const all = await getServices();
+    setServices(all);
+  };
+  
+  useEffect(() => {
+    reload();
+  }, []);
 
   const openAdd = () => { setForm(empty()); setEditId(null); setModal('add'); };
   const openEdit = (s: Service) => { setForm({ ...s }); setEditId(s.id); setModal('edit'); };
   const closeModal = () => { setModal(null); setForm(empty()); };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!form.name || !form.category) return;
     if (editId) {
-      updateService(editId, form);
+      await updateService(editId, form);
     } else {
       const newService: Service = {
         id: generateId(),
@@ -60,16 +66,16 @@ export default function AdminServicesPage() {
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       };
-      saveService(newService);
+      await saveService(newService);
     }
     closeModal();
-    reload();
+    await reload();
   };
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: string) => {
     if (window.confirm('Delete this service? This cannot be undone.')) {
-      deleteService(id);
-      reload();
+      await deleteService(id);
+      await reload();
     }
   };
 

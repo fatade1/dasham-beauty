@@ -28,7 +28,11 @@ export default function AdminAvailabilityPage() {
   const [saved, setSaved] = useState(false);
 
   useEffect(() => {
-    setAvail(getAvailability());
+    async function loadData() {
+      const data = await getAvailability();
+      setAvail(data);
+    }
+    loadData();
   }, []);
 
   const toggleDay = (d: number) => {
@@ -50,8 +54,8 @@ export default function AdminAvailabilityPage() {
     setAvail((a) => ({ ...a, blockedDates: a.blockedDates.filter((x) => x !== d) }));
   };
 
-  const handleSave = () => {
-    saveAvailability(avail);
+  const handleSave = async () => {
+    await saveAvailability(avail);
     setSaved(true);
     setTimeout(() => setSaved(false), 2000);
   };

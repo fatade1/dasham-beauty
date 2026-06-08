@@ -20,30 +20,36 @@ export default function BookingDetailPage() {
   const [saved, setSaved] = useState(false);
 
   useEffect(() => {
-    const b = getBookingById(id);
-    if (!b) {
-      router.push('/admin/bookings');
-      return;
+    async function loadData() {
+      const b = await getBookingById(id);
+      if (!b) {
+        router.push('/admin/bookings');
+        return;
+      }
+      setBooking(b);
+      setAdminNote(b.adminNote ?? '');
     }
-    setBooking(b);
-    setAdminNote(b.adminNote ?? '');
+    loadData();
   }, [id, router]);
 
   if (!booking) return null;
 
-  const reload = () => {
-    setBooking(getBookingById(id));
+  const reload = async () => {
+    const b = await getBookingById(id);
+    setBooking(b);
   };
 
-  const setStatus = (bookingStatus: BookingStatus, paymentStatus: PaymentStatus) => {
-    updateBooking(id, { bookingStatus, paymentStatus });
-    reload();
+  const setStatus = async (bookingStatus: BookingStatus, paymentStatus: PaymentStatus) => {
+    await updateBooking(id, { bookingStatus, paymentStatus });
+    await reload();
   };
 
-  const saveNote = () => {
+  const saveNote = async () => {
     setSaving(true);
-    updateBooking(id, { adminNote });
-    setTimeout(() => { setSaving(false); setSaved(true); setTimeout(() => setSaved(false), 2000); }, 400);
+    await updateBooking(id, { adminNote });
+    setSaving(false);
+    setSaved(true);
+    setTimeout(() => setSaved(false), 2000);
   };
 
   const waUrl = whatsappUrl(

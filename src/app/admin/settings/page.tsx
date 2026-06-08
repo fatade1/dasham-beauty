@@ -1,6 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { auth } from '@/lib/firebase';
+import { updatePassword } from 'firebase/auth';
 import { getSiteSettings, saveSettings } from '@/lib/storage';
 import { SiteSettings } from '@/lib/types';
 import styles from './page.module.css';
@@ -22,25 +24,42 @@ export default function AdminSettingsPage() {
   const [pwError, setPwError] = useState('');
 
   useEffect(() => {
-    setSettings(getSiteSettings());
+    async function loadData() {
+      const siteSettings = await getSiteSettings();
+      setSettings(siteSettings);
+    }
+    loadData();
   }, []);
 
-  const handleSave = () => {
-    saveSettings(settings);
+  const handleSave = async () => {
+    await saveSettings(settings);
     setSaved(true);
     setTimeout(() => setSaved(false), 2000);
   };
 
-  const handlePasswordChange = () => {
+  const handlePasswordChange = async () => {
     setPwError('');
     if (!newPassword) { setPwError('Please enter a new password'); return; }
     if (newPassword.length < 6) { setPwError('Password must be at least 6 characters'); return; }
     if (newPassword !== confirmPassword) { setPwError('Passwords do not match'); return; }
-    saveSettings({ ...settings, adminPasswordHash: newPassword });
-    setSettings((s) => ({ ...s, adminPasswordHash: newPassword }));
-    setNewPassword('');
-    setConfirmPassword('');
-    setPwError('✓ Password updated successfully!');
+    
+    try {
+      if (auth.currentUser) {
+        await updatePassword(auth.currentUser, newPassword);
+      }
+      await saveSettings({ ...settings, adminPasswordHash: newPassword });
+      setSettings((s) => ({ ...s, adminPasswordHash: newPassword }));
+      setNewPassword('');
+      setConfirmPassword('');
+      setPwError('✓ Password updated successfully!');
+    } catch (err: any) {
+      console.error('Error updating auth password:', err);
+      if (err.code === 'auth/requires-recent-login') {
+        setPwError('Please log out and log back in to change your password for security.');
+      } else {
+        setPwError('Failed to update password. Please try again.');
+      }
+    }
   };
 
   return (

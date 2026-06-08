@@ -12,7 +12,11 @@ export default function AdminDashboardPage() {
   const [bookings, setBookings] = useState<Booking[]>([]);
 
   useEffect(() => {
-    setBookings(getBookings());
+    async function loadData() {
+      const data = await getBookings();
+      setBookings(data);
+    }
+    loadData();
   }, []);
 
   const count = (status: BookingStatus) => bookings.filter((b) => b.bookingStatus === status).length;

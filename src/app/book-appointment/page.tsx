@@ -2,10 +2,9 @@
 
 import { useEffect, useState, useCallback, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { initializeDefaultData } from '@/lib/init';
 import { getServices, getSiteSettings, getAvailability, generateTimeSlots, saveBooking, generateId } from '@/lib/storage';
 import { formatNaira, formatPrice, calculateDeposit, whatsappUrl, formatTime, CATEGORY_ICONS } from '@/lib/utils';
-import { Service, ServiceCategory, Booking, PricingType } from '@/lib/types';
+import { Service, ServiceCategory, Booking, PricingType, SiteSettings } from '@/lib/types';
 import styles from './page.module.css';
 
 const STEPS = ['Service', 'Date & Time', 'Your Details', 'Payment'];
@@ -44,43 +43,58 @@ function BookingForm() {
     agreedToTerms: false,
   });
 
-  const settings = getSiteSettings();
+  const [settings, setSettings] = useState<SiteSettings>({
+    bankName: 'Access Bank',
+    accountName: 'Dasham Beauty Lounge',
+    accountNumber: '0000000000',
+    whatsappNumber: '08143137185',
+    whatsappNumber2: '09027714768',
+    instagramHandle: 'dasham_beauty_lounge_',
+    tiktokHandle: 'dashambeautylounge_',
+    adminPasswordHash: 'dasham2024',
+  });
 
   useEffect(() => {
-    initializeDefaultData();
-    const allServices = getServices().filter((s) => s.status === 'active');
-    setServices(allServices);
+    async function loadData() {
+      const siteSettings = await getSiteSettings();
+      setSettings(siteSettings);
 
-    const avail = getAvailability();
-    setWorkingDays(avail.workingDays);
-    setBlockedDates(avail.blockedDates);
-    setTimeSlots(generateTimeSlots(avail.openTime, avail.closeTime, avail.slotDurationMinutes));
+      const allServices = await getServices();
+      const activeServices = allServices.filter((s) => s.status === 'active');
+      setServices(activeServices);
 
-    // Generate next 60 days of available dates
-    const dates: string[] = [];
-    const now = new Date();
-    for (let i = 1; i <= 60; i++) {
-      const d = new Date(now);
-      d.setDate(now.getDate() + i);
-      const dayOfWeek = d.getDay();
-      const iso = d.toISOString().split('T')[0];
-      if (avail.workingDays.includes(dayOfWeek) && !avail.blockedDates.includes(iso)) {
-        dates.push(iso);
+      const avail = await getAvailability();
+      setWorkingDays(avail.workingDays);
+      setBlockedDates(avail.blockedDates);
+      setTimeSlots(generateTimeSlots(avail.openTime, avail.closeTime, avail.slotDurationMinutes));
+
+      // Generate next 60 days of available dates
+      const dates: string[] = [];
+      const now = new Date();
+      for (let i = 1; i <= 60; i++) {
+        const d = new Date(now);
+        d.setDate(now.getDate() + i);
+        const dayOfWeek = d.getDay();
+        const iso = d.toISOString().split('T')[0];
+        if (avail.workingDays.includes(dayOfWeek) && !avail.blockedDates.includes(iso)) {
+          dates.push(iso);
+        }
+      }
+      setAvailableDates(dates);
+
+      // Pre-fill service from query param
+      const serviceId = searchParams.get('service');
+      if (serviceId) {
+        const s = activeServices.find((sv) => sv.id === serviceId);
+        if (s) {
+          setSelectedServices([s]);
+          setSelectedCategory(s.category);
+          setForm((f) => ({ ...f, serviceId: s.id, category: s.category }));
+          setStep(1);
+        }
       }
     }
-    setAvailableDates(dates);
-
-    // Pre-fill service from query param
-    const serviceId = searchParams.get('service');
-    if (serviceId) {
-      const s = allServices.find((sv) => sv.id === serviceId);
-      if (s) {
-        setSelectedServices([s]);
-        setSelectedCategory(s.category);
-        setForm((f) => ({ ...f, serviceId: s.id, category: s.category }));
-        setStep(1);
-      }
-    }
+    loadData();
   }, [searchParams]);
 
   useEffect(() => {
@@ -231,7 +245,7 @@ function BookingForm() {
       updatedAt: new Date().toISOString(),
     };
 
-    saveBooking(booking);
+    await saveBooking(booking);
 
     // Send background email notification to admin (fails silently for client)
     try {

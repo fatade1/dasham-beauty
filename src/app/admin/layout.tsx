@@ -1,9 +1,12 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { isAdminAuthenticated, setAdminAuth } from '@/lib/storage';
+import { auth } from '@/lib/firebase';
+import { onAuthStateChanged } from 'firebase/auth';
+import { setAdminAuth } from '@/lib/storage';
+import { initializeDefaultData } from '@/lib/init';
 import styles from './layout.module.css';
 
 const NAV_ITEMS = [
@@ -19,16 +22,37 @@ const NAV_ITEMS = [
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
+  const [loading, setLoading] = useState(pathname !== '/admin/login');
 
   useEffect(() => {
-    if (pathname === '/admin/login') return;
-    if (!isAdminAuthenticated()) {
-      router.replace('/admin/login');
+    if (pathname === '/admin/login') {
+      setLoading(false);
+      return;
     }
+
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (!user || user.email !== 'dashambeautylounge@gmail.com') {
+        router.replace('/admin/login');
+      } else {
+        initializeDefaultData().catch((err) => console.error('Seeding database failed:', err));
+        setLoading(false);
+      }
+    });
+
+    return () => unsubscribe();
   }, [pathname, router]);
 
   if (pathname === '/admin/login') {
     return <>{children}</>;
+  }
+
+  if (loading) {
+    return (
+      <div className={styles.loaderContainer}>
+        <div className={styles.spinner} />
+        <p className={styles.loaderText}>Verifying Session…</p>
+      </div>
+    );
   }
 
   const handleLogout = () => {

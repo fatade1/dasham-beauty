@@ -14,7 +14,11 @@ export default function GalleryPage() {
   const dialogRef = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
-    setImages(getGallery().filter((g) => g.status === 'active'));
+    async function loadData() {
+      const allGallery = await getGallery();
+      setImages(allGallery.filter((g) => g.status === 'active'));
+    }
+    loadData();
   }, []);
 
   const filtered = filter === 'All' ? images : images.filter((img) => img.category === filter);

@@ -1,0 +1,46 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper function to check if the user is the authenticated admin
+    function isAdmin() {
+      return request.auth != null && request.auth.token.email == 'dashambeautylounge@gmail.com';
+    }
+
+    // Services: public read, admin write
+    match /services/{serviceId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Gallery: public read, admin write
+    match /gallery/{imageId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Settings (global document 'business'): public read, admin write
+    match /settings/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Availability (global document 'schedule'): public read, admin write
+    match /availability/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Terms (global document 'terms'): public read, admin write
+    match /terms/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Bookings: clients can create; admin can read, update, delete
+    match /bookings/{bookingId} {
+      allow read: if isAdmin();
+      allow create: if true;
+      allow update, delete: if isAdmin();
+    }
+  }
+}

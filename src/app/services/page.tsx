@@ -2,7 +2,6 @@
 
 import { useEffect, useState, useRef } from 'react';
 import Link from 'next/link';
-import { initializeDefaultData } from '@/lib/init';
 import { getServices } from '@/lib/storage';
 import { formatPrice, CATEGORY_ICONS, whatsappUrl } from '@/lib/utils';
 import { Service, ServiceCategory } from '@/lib/types';
@@ -29,17 +28,20 @@ export default function ServicesPage() {
   const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
 
   useEffect(() => {
-    initializeDefaultData();
-    setServices(getServices().filter((s) => s.status === 'active'));
+    async function loadData() {
+      const allServices = await getServices();
+      setServices(allServices.filter((s) => s.status === 'active'));
 
-    // Handle hash navigation
-    const hash = window.location.hash.replace('#', '');
-    if (hash) {
-      const matched = CATEGORIES.find(
-        (c) => c.toLowerCase().replace(/ /g, '-') === hash
-      );
-      if (matched) setActiveCategory(matched);
+      // Handle hash navigation
+      const hash = window.location.hash.replace('#', '');
+      if (hash) {
+        const matched = CATEGORIES.find(
+          (c) => c.toLowerCase().replace(/ /g, '-') === hash
+        );
+        if (matched) setActiveCategory(matched);
+      }
     }
+    loadData();
   }, []);
 
   const scrollToCategory = (cat: ServiceCategory) => {

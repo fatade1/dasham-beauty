@@ -12,8 +12,14 @@ export default function AdminGalleryPage() {
   const [uploading, setUploading] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
 
-  const reload = () => setImages(getGallery());
-  useEffect(reload, []);
+  const reload = async () => {
+    const all = await getGallery();
+    setImages(all);
+  };
+  
+  useEffect(() => {
+    reload();
+  }, []);
 
   const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files ?? []);
@@ -33,29 +39,37 @@ export default function AdminGalleryPage() {
         });
       };
       reader.readAsDataURL(file);
-    }))).then((newImages) => {
-      newImages.forEach(saveGalleryImage);
-      reload();
+    }))).then(async (newImages) => {
+      await Promise.all(newImages.map(saveGalleryImage));
+      await reload();
       setUploading(false);
       if (fileRef.current) fileRef.current.value = '';
     });
   };
 
-  const toggleStatus = (id: string, status: 'active' | 'inactive' | 'hidden') => {
-    updateGalleryImage(id, { status: status === 'active' ? 'inactive' : 'active' });
-    reload();
+  const toggleStatus = async (id: string, status: 'active' | 'inactive' | 'hidden') => {
+    await updateGalleryImage(id, { status: status === 'active' ? 'inactive' : 'active' });
+    await reload();
   };
 
-  const handleCategory = (id: string, category: GalleryCategory) => {
-    updateGalleryImage(id, { category });
-    reload();
+  const handleCategory = async (id: string, category: GalleryCategory) => {
+    await updateGalleryImage(id, { category });
+    await reload();
   };
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: string) => {
     if (window.confirm('Delete this image?')) {
-      deleteGalleryImage(id);
-      reload();
+      await deleteGalleryImage(id);
+      await reload();
     }
+  };
+
+  const handleTitleChange = (id: string, title: string) => {
+    setImages((prev) => prev.map((img) => img.id === id ? { ...img, title } : img));
+  };
+
+  const saveTitle = async (id: string, title: string) => {
+    await updateGalleryImage(id, { title });
   };
 
   return (
@@ -91,8 +105,8 @@ export default function AdminGalleryPage() {
                 <input
                   className={styles.titleInput}
                   value={img.title}
-                  onChange={(e) => { updateGalleryImage(img.id, { title: e.target.value }); }}
-                  onBlur={reload}
+                  onChange={(e) => handleTitleChange(img.id, e.target.value)}
+                  onBlur={() => saveTitle(img.id, img.title)}
                   placeholder="Title"
                 />
                 <select

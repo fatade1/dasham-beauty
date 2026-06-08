@@ -10,9 +10,12 @@ export default function TermsPage() {
   const [updated, setUpdated] = useState('');
 
   useEffect(() => {
-    const t = getTerms();
-    setTerms(t.content);
-    setUpdated(new Date(t.updatedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }));
+    async function loadData() {
+      const t = await getTerms();
+      setTerms(t.content);
+      setUpdated(new Date(t.updatedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }));
+    }
+    loadData();
   }, []);
 
   return (
